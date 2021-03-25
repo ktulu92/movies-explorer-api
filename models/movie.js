@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const { isURL } = require('validator');
 
 const MovieSchema = new mongoose.Schema({
   country: {
@@ -32,8 +33,8 @@ const MovieSchema = new mongoose.Schema({
     type: String,
     required: true,
     validate: {
-      validator() {
-        return /^(https?:\/\/)([\da-z.-]+)\.([a-z.]{2,6})([/\w .-]*)/g;
+      validator(v) {
+        return isURL(v);
       },
     },
     message: 'Должен быть URL',
@@ -43,8 +44,8 @@ const MovieSchema = new mongoose.Schema({
     type: String,
     required: true,
     validate: {
-      validator() {
-        return /^(https?:\/\/)([\da-z.-]+)\.([a-z.]{2,6})([/\w .-]*)/g;
+      validator(v) {
+        return isURL(v);
       },
     },
     message: 'Должен быть URL',
@@ -54,8 +55,8 @@ const MovieSchema = new mongoose.Schema({
     type: String,
     required: true,
     validate: {
-      validator() {
-        return /^(https?:\/\/)([\da-z.-]+)\.([a-z.]{2,6})([/\w .-]*)/g;
+      validator(v) {
+        return isURL(v);
       },
     },
     message: 'Должен быть URL',

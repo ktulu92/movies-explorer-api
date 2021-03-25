@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const { errors } = require('celebrate');
 const cors = require('cors');
-const { CelebrateError } = require('celebrate');
+// const { CelebrateError } = require('celebrate');
 const { NotFoundError } = require('./errors/NotFoundError');
 const errorHandler = require('./middlewares/errorHandler');
 
@@ -32,46 +32,18 @@ app.use('/', router);
 mongoose.connection.on('open', () => console.log('коннект!'));
 mongoose.connection.on('error', () => console.log('ошибка'));
 
-// next();
-
-// ...
-
-// обработчики ошибок
-
 app.get('/crash-test', () => {
   setTimeout(() => {
     throw new Error('Сервер сейчас упадёт');
   }, 0);
 });
 
-// const auth = require('./middlewares/auth');
-
-// Сделать как в вебинаре
-// app.use((err, req, res, next) => {
-//   const { statusCode = 500, message } = err;
-//   res.status(statusCode).send({
-//     message: statusCode === 500 ? 'Ошибка сервера' : message,
-//   });
-//   next();
-// });
 app.use(errorLogger); // подключаем логгер ошибок
 
 app.use('*', (req, res, next) => {
   next(new NotFoundError('Запрашиваемый ресурс не найден'));
 });
-// app.use((err, req, res, next) => {
-//   //  eslint-disable-next-line
-//   console.log({ error: err });
-//   if (err instanceof CelebrateError) {
-//     return res.status(400).send({ message: err.details.get('body').details[0].message });
-//   }
-//   if (err.status) {
-//     return res.status(err.status).send({ message: err.message });
-//   }
-//   res.status(500).send({ message: err.message });
-//   next();
-//   return 0;
-// });
+
 app.use(errors());
 app.use(errorHandler);
 

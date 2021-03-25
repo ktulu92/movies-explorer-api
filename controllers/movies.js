@@ -12,11 +12,37 @@ const getMovies = (req, res, next) => {
 };
 
 const createMovie = (req, res, next) => {
-  const { name, link, owner = req.user._id } = req.body;
+  const {
+    country,
+    director,
+    duration,
+    year,
+    description,
+    image,
+    trailer,
+    nameRU,
+    nameEN,
+    thumbnail,
+    owner = req.user._id,
+    movieId,
+  } = req.body;
 
-  Movie.create({ name, link, owner })
-    .then((card) => res.status(200).send(card))
-    .catch(() => next(new ServerError('Ошибка на сервере')));
+  Movie.create({
+    country,
+    director,
+    duration,
+    year,
+    description,
+    image,
+    trailer,
+    nameRU,
+    nameEN,
+    thumbnail,
+    owner,
+    movieId,
+  })
+    .then((movie) => res.status(200).send(movie))
+    .catch((err) => next(new ServerError(err)));
 };
 
 const deleteMovie = (req, res, next) => {

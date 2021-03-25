@@ -7,7 +7,7 @@ const ServerError = require('../errors/ServerError');
 const UnauthorizedError = require('../errors/UnauthorizedError');
 const ConflictError = require('../errors/ConflictError');
 // const ForbiddenError = require('../errors/ForbiddenError');
-const JWT_SECRET = require('./config');
+const { JWT_SECRET } = require('./config');
 
 const getUsers = (req, res, next) => {
   User.find({})
@@ -55,7 +55,7 @@ const createUser = (req, res, next) => {
 
     .catch(next);
 };
-
+// some-secret-code
 const login = (req, res, next) => {
   const { email, password } = req.body;
 
@@ -67,7 +67,7 @@ const login = (req, res, next) => {
       });
       res.send({ token });
     })
-    .catch(() => next(new UnauthorizedError('Неверный логин или пароль'))); // исправить ошибку
+    .catch(next); // исправить ошибку
 };
 
 const updateProfile = (req, res, next) => {
@@ -85,11 +85,21 @@ const updateProfile = (req, res, next) => {
 
 const getUserInfo = (req, res, next) => {
   const { _id } = req.user;
-  const user = User.findById(_id);
-  if (!user) {
-    throw new NotFoundError('Пользователь не найден');
-  }
-  res.status(200).send(user).catch(next);
+  // const user = User.findById(_id);
+  // if (!user) {
+  //   throw new NotFoundError('Пользователь не найден');
+  // }
+  return User.findById(_id)
+    .orFail(() => {
+      throw new NotFoundError('Пользователь не найден');
+    })
+    .then((user) => {
+      const { name, email } = user;
+      const userData = { name, email };
+
+      res.send(userData);
+    })
+    .catch(next);
 };
 module.exports = {
   getUsers,

@@ -1,15 +1,16 @@
 const jwt = require('jsonwebtoken');
+
 const { JWT_SECRET } = require('../controllers/config');
 const UnauthorizedError = require('../errors/UnauthorizedError');
 
 const auth = (req, res, next) => {
-  const { autorization } = req.headers;
+  const { authorization } = req.headers;
 
-  if (!autorization || !autorization.startsWith('Bearer ')) {
+  if (!authorization || !authorization.startsWith('Bearer ')) {
     throw new UnauthorizedError('Авторизируйтесь');
   }
 
-  const token = autorization.replace('Bearer ', ' ');
+  const token = authorization.replace('Bearer ', '');
   let payload;
 
   try {
